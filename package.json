@@ -1,0 +1,17 @@
+{
+  "name": "resistor-tracker",
+  "description": "React-based web app that lets you inventory your resistors by reading their color codes",
+  "version": "1.0.0",
+  "keywords": [
+    "React",
+    "TailwindCSS"
+  ],
+  "author": "Jhordy Gavinchu <dev@jhordyess.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.prod.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  }
+}

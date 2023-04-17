@@ -1,0 +1,19 @@
+{
+  "name": "resistor-tracker",
+  "image": "jhordyess/node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dsznajder.es7-react-js-snippets",
+        "WallabyJs.console-ninja",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+  "postCreateCommand": "bash config.sh",
+  "remoteUser": "node"
+}
