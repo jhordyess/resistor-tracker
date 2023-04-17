@@ -14,10 +14,9 @@ module.exports = {
     filename: "[name].[contenthash].js",
   },
   resolve: {
-    extensions: [".tsx", ".ts"],
+    extensions: [".tsx", ".ts", ".js"],
     alias: {
       "@components": path.resolve(__dirname, "src", "components"),
-      "@styles": path.resolve(__dirname, "src", "styles"),
       "@pages": path.resolve(__dirname, "src", "pages"),
     },
   },

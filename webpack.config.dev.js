@@ -3,17 +3,16 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: path.join(__dirname, "src", "index.js"),
+  entry: path.join(__dirname, "src", "index.tsx"),
   mode: "development",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
   resolve: {
-    extensions: [".ts", ".tsx"],
+    extensions: [".ts", ".tsx", ".js"],
     alias: {
       "@components": path.resolve(__dirname, "src", "components"),
-      "@styles": path.resolve(__dirname, "src", "styles"),
       "@pages": path.resolve(__dirname, "src", "pages"),
     },
   },
