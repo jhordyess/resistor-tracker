@@ -1,4 +1,4 @@
-type ESeries = 3 | 6 | 12 | 24 | 48 | 96 | 192;
+import { ESeries } from "./types";
 
 /**
 
@@ -49,6 +49,7 @@ function calculatePos(pos: number, E: ESeries): number {
   // Check if the position is valid
   if (pos < 0) return -1;
   // Determine if the series is E48 or higher
+  // TODO E48 and higher doesn't have support yet
   const bool = E > 24;
 
   // Calculate the approximate resistor value

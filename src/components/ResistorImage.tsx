@@ -1,81 +1,173 @@
 import * as React from "react";
+import colors from "@utils/resistorColors";
+import { Resistor } from "@utils/types";
 
-const Resistor = ({ value, width = 192, height = 80, powerRating = 0 }) => {
-  const xPadding = 10;
-  const terminalLength = 10;
-  const bandWidth = 6;
+const Resistor = ({
+  value = ["1", "2", "3", "10"],
+  width = 192,
+  height = 80,
+  powerRating = 0.5,
+}: {
+  value?: string[];
+  width?: number;
+  height?: number;
+  powerRating?: Resistor["powerRating"];
+}) => {
+  const power2Width = Math.abs(powerRating - 1) * 5;
+  const power2Height = 1 / powerRating;
 
-  const sepXBand = 5;
-  const resistorWidth = 4 * (bandWidth + sepXBand) + sepXBand;
+  const xPadding = 0 + power2Width;
+  const yPadding = 20 + power2Height;
 
-  const firstBand = xPadding + terminalLength + sepXBand;
-  const secondBand = firstBand + bandWidth + sepXBand;
-  const thirdBand = secondBand + bandWidth + sepXBand;
-  const fourthBand = thirdBand + bandWidth + sepXBand;
+  const terminalLength = 25;
+
+  const blockWidth = 30;
+  const blockHeight = height - 2 * yPadding;
+
+  const factor = blockHeight / 5;
+
+  const bandWidth = 12;
+  const bandHeight = blockHeight - factor;
+  const sepXBand = 10;
+
+  const block1 = {
+    x: xPadding + terminalLength,
+    width: blockWidth,
+    y: yPadding,
+    height: blockHeight,
+  };
+
+  const resistor = {
+    x: block1.x + blockWidth,
+    width: width - 2 * xPadding - 2 * terminalLength - 2 * blockWidth,
+    y: block1.y + factor / 2,
+    height: bandHeight,
+  };
+
+  const block2 = {
+    x: resistor.x + resistor.width,
+    width: blockWidth,
+    y: block1.y,
+    height: blockHeight,
+  };
+
+  const [terminal1, terminal2] = [
+    { x1: xPadding, x2: xPadding + terminalLength },
+    {
+      x1: width - xPadding,
+      x2: width - xPadding - terminalLength,
+    },
+  ];
+
+  const firstBand = {
+    x: resistor.x + sepXBand,
+    width: bandWidth,
+    y: resistor.y,
+    height: resistor.height,
+    fill: colors.color1.find((color) => color.value === value[0]).hexColor,
+  };
+
+  const secondBand = {
+    x: firstBand.x + bandWidth + sepXBand,
+    width: bandWidth,
+    y: resistor.y,
+    height: resistor.height,
+    fill: colors.color2.find((color) => color.value === value[1]).hexColor,
+  };
+
+  const thirdBand = {
+    x: secondBand.x + bandWidth + sepXBand,
+    width: bandWidth,
+    y: resistor.y,
+    height: resistor.height,
+    fill: colors.multiply.find((color) => color.value === value[2]).hexColor,
+  };
+
+  const fourthBand = {
+    x: width - xPadding - terminalLength - sepXBand - bandWidth,
+    width: bandWidth,
+    y: block1.y,
+    height: block1.height,
+    fill: colors.tolerance.find((color) => color.value === value[3]).hexColor,
+  };
 
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 200 50"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect width="100%" height="100%" fill="#F0F0F0" />
-
+    <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg">
+      {/* Blocks */}
       <rect
-        x={`${terminalLength + xPadding}%`}
-        y="30%"
-        width={`${resistorWidth}%`}
-        height="50%" // usado para power rating
+        x={block1.x}
+        width={block1.width}
+        y={block1.y}
+        height={block1.height}
+        rx="5"
+        ry="5"
+        fill="#D3D3D3"
+      />
+      <rect
+        x={block2.x}
+        width={block2.width}
+        y={block2.y}
+        height={block2.height}
         rx="5"
         ry="5"
         fill="#D3D3D3"
       />
 
+      {/* Resistor element */}
       <rect
-        x={`${firstBand}%`}
-        y="30%"
-        width={`${bandWidth}%`}
-        height="40%"
-        fill="#0000FF"
-      />
-      <rect
-        x={`${secondBand}%`}
-        y="30%"
-        width={`${bandWidth}%`}
-        height="40%"
-        fill="#008000"
-      />
-      <rect
-        x={`${thirdBand}%`}
-        y="30%"
-        width={`${bandWidth}%`}
-        height="40%"
-        fill="#FFD700"
-      />
-      <rect
-        x={`${fourthBand}%`}
-        y="30%"
-        width={`${bandWidth}%`}
-        height="40%"
-        fill="#8B0000"
+        x={resistor.x}
+        width={resistor.width}
+        y={resistor.y}
+        height={resistor.height}
+        fill="#D3D3D3"
       />
 
+      {/* 4 bands */}
+      <rect
+        x={firstBand.x}
+        width={firstBand.width}
+        y={firstBand.y}
+        height={firstBand.height}
+        fill={firstBand.fill}
+      />
+      <rect
+        x={secondBand.x}
+        width={secondBand.width}
+        y={secondBand.y}
+        height={secondBand.height}
+        fill={secondBand.fill}
+      />
+      <rect
+        x={thirdBand.x}
+        width={thirdBand.width}
+        y={thirdBand.y}
+        height={thirdBand.height}
+        fill={thirdBand.fill}
+      />
+      <rect
+        x={fourthBand.x}
+        width={fourthBand.width}
+        y={fourthBand.y}
+        height={fourthBand.height}
+        fill={fourthBand.fill}
+      />
+
+      {/* Terminals */}
       <line
-        x1={`${xPadding}%`}
+        x1={terminal1.x1}
+        x2={terminal1.x2}
         y1="50%"
-        x2={`${terminalLength + xPadding}%`}
         y2="50%"
         stroke="#808080"
-        stroke-width="3"
+        strokeWidth="3"
       />
       <line
-        x1={`${resistorWidth + terminalLength + xPadding}%`}
+        x1={terminal2.x1}
+        x2={terminal2.x2}
         y1="50%"
-        x2={`${100 - resistorWidth + terminalLength + xPadding}%`}
         y2="50%"
         stroke="#808080"
-        stroke-width="3"
+        strokeWidth="3"
       />
     </svg>
   );

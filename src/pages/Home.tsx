@@ -5,8 +5,9 @@ import AddResistor from "@components/AddResistor";
 import ResistorListItem from "@components/ResistorListItem";
 import { Resistor } from "@utils/types";
 import { format2SIUnits } from "@utils/cals";
+import colors from "@utils/resistorColors";
 
-const convertPowerRating = (powerRating: number) => {
+const convertPowerRating = (powerRating: Resistor["powerRating"]) => {
   if (powerRating === 0.25) return "1/4 W";
   if (powerRating === 0.5) return "1/2 W";
   if (powerRating === 1) return "1 W";
@@ -14,14 +15,11 @@ const convertPowerRating = (powerRating: number) => {
 };
 
 const chooseColor = (tolerance: number) => {
-  let color = tolerances.find((t) => t.value === tolerance)?.color;
-  if (color === "brown") color = "bg-amber-700";
-  if (color === "gold") color = "bg-yellow-500";
-  if (color === "silver") color = "bg-gray-500";
-  if (color === "none") {
-    return `text-gray-700 bg-white-200 border border-gray-200`;
+  let t = colors.tolerance.find((t) => t.value === String(tolerance));
+  if (t.eSeries === 6) {
+    return `text-gray-700 border border-gray-200 ${t.class}`;
   }
-  return `text-white ${String(color)}`;
+  return `text-white ${t.class}`;
 };
 
 let resistorListDef: Resistor[] = [
@@ -29,28 +27,17 @@ let resistorListDef: Resistor[] = [
   { value: 47, powerRating: 0.5, tolerance: 5, quantity: 10 },
   { value: 100, powerRating: 1, tolerance: 10, quantity: 5 },
   { value: 220, powerRating: 1, tolerance: 5, quantity: 6 },
-  { value: 470, powerRating: 0.5, tolerance: 1, quantity: 1 },
+  { value: 470, powerRating: 0.5, tolerance: 10, quantity: 1 },
   { value: 1000, powerRating: 0.25, tolerance: 20, quantity: 3 },
 ];
 
-/**
- * Resistor Tolerance List
- * Not included E3 and E192
- */
-const tolerances = [
-  { value: 1, color: "brown", eSeries: 96 },
-  { value: 2, color: "red", eSeries: 48 },
-  { value: 5, color: "gold", eSeries: 24 },
-  { value: 10, color: "silver", eSeries: 12 },
-  { value: 20, color: "none", eSeries: 6 },
-];
-
 export default function Home() {
-  const [resistorList, setResistorList] = React.useState(resistorListDef);
+  const [resistorList, setResistorList] =
+    React.useState<Resistor[]>(resistorListDef);
 
   const [searchValue, setSearchValue] = React.useState("");
 
-  let searchedResistors = [];
+  let searchedResistors: Resistor[] = [];
 
   if (searchValue.length < 1) {
     searchedResistors = resistorList;
@@ -62,37 +49,76 @@ export default function Home() {
     });
   }
 
+  const subtractQuantity = (
+    value: number,
+    powerRating: number,
+    tolerance: number
+  ) => {
+    let newResistorList: Resistor[] = [];
+    resistorList.forEach((resistor) => {
+      if (
+        resistor.value === value &&
+        resistor.powerRating === powerRating &&
+        resistor.tolerance === tolerance
+      ) {
+        if (resistor.quantity > 1) resistor.quantity = resistor.quantity - 1;
+        else return;
+      }
+      newResistorList.push(resistor);
+    });
+    setResistorList(newResistorList);
+  };
+
+  const addQuantity = (
+    value: number,
+    powerRating: number,
+    tolerance: number
+  ) => {
+    const newResistorList = resistorList.map((resistor) => {
+      if (
+        resistor.value === value &&
+        resistor.powerRating === powerRating &&
+        resistor.tolerance === tolerance
+      ) {
+        resistor.quantity = resistor.quantity + 1;
+      }
+      return resistor;
+    });
+    setResistorList(newResistorList);
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container p-8 mx-auto">
-        <header className="bg-white p-4">
-          <h1 className="text-xl font-bold text-gray-800">Resistor Tracker</h1>
-        </header>
-        <main className="">
-          <h2>My inventory</h2>
+        <header className="bg-white p-4 flex gap-4 rounded-lg">
+          <h1 className="text-xl font-bold text-gray-800">Resistor Track</h1>
+          <AddResistor />
           <SearchBar
             searchValue={searchValue}
             setSearchValue={setSearchValue}
           />
+        </header>
+        <main className="py-4">
           <ResistorList>
-            {searchedResistors.map((resistor) => (
-              <ResistorListItem
-                key={
-                  resistor.value +
-                  resistor.tolerance +
-                  resistor.powerRating +
-                  ""
-                }
-                value={format2SIUnits(resistor.value)}
-                tolerance={resistor.tolerance}
-                className={chooseColor(resistor.tolerance)}
-                powerRating={convertPowerRating(resistor.powerRating)}
-                quantity={resistor.quantity}
-                removeResistor={() => {}}
-              />
-            ))}
+            {searchedResistors.map(
+              ({ value, powerRating, tolerance, quantity }) => (
+                <ResistorListItem
+                  key={value + tolerance + powerRating + ""}
+                  value={format2SIUnits(value)}
+                  tolerance={tolerance}
+                  className={chooseColor(tolerance)}
+                  powerRating={convertPowerRating(powerRating)}
+                  quantity={quantity}
+                  subtractQuantity={() => {
+                    subtractQuantity(value, powerRating, tolerance);
+                  }}
+                  addQuantity={() => {
+                    addQuantity(value, powerRating, tolerance);
+                  }}
+                />
+              )
+            )}
           </ResistorList>
-          <AddResistor />
         </main>
       </div>
     </div>
