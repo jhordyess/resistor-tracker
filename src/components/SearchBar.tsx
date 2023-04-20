@@ -1,6 +1,9 @@
+import { Context } from "@pages/Home/context";
 import * as React from "react";
 
-export default function SearchBar({ searchValue, setSearchValue }) {
+export default function SearchBar() {
+  const { searchValue, setSearchValue } = React.useContext(Context);
+
   const onSearchValueChange = (event) => {
     setSearchValue(event.target.value);
   };

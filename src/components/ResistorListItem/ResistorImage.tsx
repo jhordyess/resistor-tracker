@@ -4,9 +4,9 @@ import { Resistor } from "@utils/types";
 
 const Resistor = ({
   value = ["1", "2", "3", "10"],
+  powerRating = 0.5,
   width = 192,
   height = 80,
-  powerRating = 0.5,
 }: {
   value?: string[];
   width?: number;
