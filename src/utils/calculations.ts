@@ -1,4 +1,5 @@
 import { ESeries } from "./types";
+import colors from "./resistorColors";
 
 /**
 
@@ -82,4 +83,53 @@ const format2SIUnits = (value: number) => {
   return `${value} ${units[unitIndex]}Ω`;
 };
 
-export { findAproxStandardResistor, format2SIUnits };
+const readResistorValue = (
+  first: string,
+  second: string,
+  multiply: string
+): number => {
+  let value = 0;
+  try {
+    const NMultiply = Number(multiply);
+
+    value = Number(first + second);
+
+    value *= Math.pow(10, NMultiply);
+  } catch (error) {
+  } finally {
+    return value || 0;
+  }
+};
+
+const readResistorValueInverse = (value: number): [string, string, string] => {
+  const digits = value.toString();
+  const first = digits.charAt(0);
+  const second = digits.charAt(1);
+  const NMultiply = Math.floor(Math.log10(value / Number(first + second)));
+  const multiply = NMultiply.toString();
+  return [first, second, multiply];
+};
+
+const checkStandardResistor = (value: number, tolerance: string): string => {
+  let msg = "";
+  const E: ESeries = colors.tolerance.find(
+    (e) => e.value === tolerance
+  )?.eSeries;
+  const aproxRes = findAproxStandardResistor(value, E);
+  if (aproxRes.length === 0) msg = "Invalid resistor value";
+  if (aproxRes.length === 2 && aproxRes[0] !== value && aproxRes[1] !== value)
+    msg =
+      "Not a standard resistor, the nearest values are " +
+      format2SIUnits(aproxRes[0]) +
+      " and " +
+      format2SIUnits(aproxRes[1]);
+  return msg;
+};
+
+export {
+  findAproxStandardResistor,
+  format2SIUnits,
+  readResistorValue,
+  checkStandardResistor,
+  readResistorValueInverse,
+};
