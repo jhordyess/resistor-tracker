@@ -7,10 +7,12 @@ const Resistor = ({
   powerRating = 0.5,
   width = 192,
   height = 80,
+  bandWidth = 12,
 }: {
   value?: string[];
   width?: number;
   height?: number;
+  bandWidth?: number;
   powerRating?: Resistor["powerRating"];
 }) => {
   const power2Width = Math.abs(powerRating - 1) * 5;
@@ -19,14 +21,14 @@ const Resistor = ({
   const xPadding = 0 + power2Width;
   const yPadding = 20 + power2Height;
 
-  const terminalLength = 25;
+  const terminalLength = width / 8;
 
-  const blockWidth = 30;
+  const blockWidth = width / 6;
   const blockHeight = height - 2 * yPadding;
 
   const factor = blockHeight / 5;
 
-  const bandWidth = 12;
+  // const bandWidth = 12;
   const bandHeight = blockHeight - factor;
   const sepXBand = 10;
 
@@ -64,7 +66,9 @@ const Resistor = ({
     width: bandWidth,
     y: resistor.y,
     height: resistor.height,
-    fill: colors.color1.find((color) => color.value === value[0]).hexColor,
+    fill:
+      colors.color1.find((color) => color.value === value[0])?.hexColor ||
+      "#D3D3D3",
   };
 
   const secondBand = {
@@ -72,7 +76,9 @@ const Resistor = ({
     width: bandWidth,
     y: resistor.y,
     height: resistor.height,
-    fill: colors.color2.find((color) => color.value === value[1]).hexColor,
+    fill:
+      colors.color2.find((color) => color.value === value[1])?.hexColor ||
+      "#D3D3D3",
   };
 
   const thirdBand = {
@@ -80,7 +86,9 @@ const Resistor = ({
     width: bandWidth,
     y: resistor.y,
     height: resistor.height,
-    fill: colors.multiply.find((color) => color.value === value[2]).hexColor,
+    fill:
+      colors.multiply.find((color) => color.value === value[2])?.hexColor ||
+      "#D3D3D3",
   };
 
   const fourthBand = {
@@ -88,7 +96,9 @@ const Resistor = ({
     width: bandWidth,
     y: block1.y,
     height: block1.height,
-    fill: colors.tolerance.find((color) => color.value === value[3]).hexColor,
+    fill:
+      colors.tolerance.find((color) => color.value === value[3])?.hexColor ||
+      "#D3D3D3",
   };
 
   return (

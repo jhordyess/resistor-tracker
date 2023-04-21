@@ -1,5 +1,14 @@
 import * as React from "react";
 import ResistorImage from "./ResistorImage";
+import { format2SIUnits, readResistorValueInverse } from "@utils/calculations";
+import { Resistor } from "@utils/types";
+
+const convertPowerRating = (powerRating: Resistor["powerRating"]) => {
+  if (powerRating === 0.25) return "1/4 W";
+  if (powerRating === 0.5) return "1/2 W";
+  if (powerRating === 1) return "1 W";
+  if (powerRating === 2) return "2 W";
+};
 
 export default function ResistorListItem({
   value,
@@ -16,19 +25,22 @@ export default function ResistorListItem({
       className="flex flex-col border rounded-3xl p-4 bg-white w-full"
     >
       <div className="flex-1 font-bold flex justify-between">
-        <div>{value}</div>
+        <div>{format2SIUnits(value)}</div>
 
         <div className={`px-2 py-1 rounded-full text-xs ${className}`}>
           {tolerance} %
         </div>
 
         <div className="px-2 py-1 rounded-full text-white bg-green-400 text-xs">
-          {powerRating}
+          {convertPowerRating(powerRating)}
         </div>
       </div>
 
       <div className="flex-1 self-center py-2">
-        <ResistorImage />
+        <ResistorImage
+          value={[...readResistorValueInverse(value), String(tolerance)]}
+          powerRating={powerRating}
+        />
       </div>
 
       <div className="flex-1 text-gray-700 flex gap-3 justify-center align-middle">
