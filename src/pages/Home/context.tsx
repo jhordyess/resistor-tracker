@@ -74,6 +74,34 @@ const Provider = ({ children }) => {
     setResistorList(newResistorList);
   };
 
+  const appendResistor = (resistor: Resistor) => {
+    // check if resistor already exist with value, powerRating and tolerance, if so, add quantity
+    const resistorExists = resistorList.find((res) => {
+      return (
+        res.value === resistor.value &&
+        res.powerRating === resistor.powerRating &&
+        res.tolerance === resistor.tolerance
+      );
+    });
+    if (resistorExists) {
+      const newResistorList = resistorList.map((res) => {
+        if (
+          res.value === resistor.value &&
+          res.powerRating === resistor.powerRating &&
+          res.tolerance === resistor.tolerance
+        ) {
+          res.quantity = res.quantity + resistor.quantity;
+        }
+        return res;
+      });
+      window.alert("Resistor already exists, quantity added");
+      setResistorList(newResistorList);
+      return;
+    }
+    const newResistorList = [...resistorList, resistor];
+    setResistorList(newResistorList);
+  };
+
   return (
     <Context.Provider
       value={{
@@ -82,6 +110,7 @@ const Provider = ({ children }) => {
         addQuantity,
         searchValue,
         setSearchValue,
+        appendResistor,
       }}
     >
       {children}

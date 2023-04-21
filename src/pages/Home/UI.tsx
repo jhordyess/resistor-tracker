@@ -3,24 +3,15 @@ import SearchBar from "@components/SearchBar";
 import ResistorList from "@components/ResistorList";
 import AddResistor from "@components/AddResistor";
 import ResistorListItem from "@components/ResistorListItem";
-import { format2SIUnits } from "@utils/cals";
-import { Resistor } from "@utils/types";
 import colors from "@utils/resistorColors";
 import { Context } from "./context";
 
-const convertPowerRating = (powerRating: Resistor["powerRating"]) => {
-  if (powerRating === 0.25) return "1/4 W";
-  if (powerRating === 0.5) return "1/2 W";
-  if (powerRating === 1) return "1 W";
-  if (powerRating === 2) return "2 W";
-};
-
 const chooseColor = (tolerance: number) => {
   let t = colors.tolerance.find((t) => t.value === String(tolerance));
-  if (t.eSeries === 6) {
-    return `text-gray-700 border border-gray-200 ${t.class}`;
+  if (t?.eSeries === 6) {
+    return `text-gray-700 border border-gray-200 ${t.className}`;
   }
-  return `text-white ${t.class}`;
+  return `text-white ${t.className}`;
 };
 
 const HomeUI = () => {
@@ -30,10 +21,16 @@ const HomeUI = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container p-8 mx-auto">
-        <header className="bg-white p-4 flex gap-4 rounded-lg">
-          <h1 className="text-xl font-bold text-gray-800">Resistor Track</h1>
-          <AddResistor />
-          <SearchBar />
+        <header className="bg-white p-4 flex justify-between rounded-lg flex-col sm:flex-row gap-2">
+          <div className="flex gap-4">
+            <h1 className="text-xl font-bold text-gray-800 self-center">
+              Resistor Track
+            </h1>
+            <AddResistor />
+          </div>
+          <div>
+            <SearchBar />
+          </div>
         </header>
         <main className="py-4">
           <ResistorList>
@@ -41,10 +38,10 @@ const HomeUI = () => {
               ({ value, powerRating, tolerance, quantity }) => (
                 <ResistorListItem
                   key={value + tolerance + powerRating + ""}
-                  value={format2SIUnits(value)}
+                  value={value}
                   tolerance={tolerance}
                   className={chooseColor(tolerance)}
-                  powerRating={convertPowerRating(powerRating)}
+                  powerRating={powerRating}
                   quantity={quantity}
                   subtractQuantity={() => {
                     subtractQuantity(value, powerRating, tolerance);
@@ -57,6 +54,24 @@ const HomeUI = () => {
             )}
           </ResistorList>
         </main>
+        <footer className="mt-8 text-center">
+          Made with 💪 by&nbsp;
+          <a
+            className="text-blue-600 hover:text-blue-400"
+            href="https://www.jhordyess.com"
+            target="_blank"
+          >
+            Jhordyess
+          </a>
+          <br />
+          <a
+            href="https://github.com/jhordyess/resistor-tracker"
+            target="_blank"
+            className="text-blue-600 hover:text-blue-400"
+          >
+            👉 View on GitHub
+          </a>
+        </footer>
       </div>
     </div>
   );
