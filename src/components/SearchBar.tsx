@@ -8,13 +8,12 @@ export default function SearchBar() {
     setSearchValue(event.target.value);
   };
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchValue}
-        onChange={onSearchValueChange}
-      />
-    </div>
+    <input
+      type="text"
+      placeholder="Search..."
+      value={searchValue}
+      onChange={onSearchValueChange}
+      className="w-full p-2 rounded-lg border"
+    />
   );
 }
