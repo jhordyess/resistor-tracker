@@ -1,49 +1,25 @@
-import * as React from "react";
 import UI from "./UI";
-import { Context } from "@pages/Home/context";
-import { Resistor } from "@utils/types";
-import { checkStandardResistor, readResistorValue } from "@utils/calculations";
-
-const toleranceMap: Record<string, Resistor["tolerance"]> = {
-  "5": 5,
-  "10": 10,
-  "20": 20,
-};
-export const powerRatingMap: Record<string, Resistor["powerRating"]> = {
-  "1/4": 0.25,
-  "1/2": 0.5,
-  "1": 1,
-  "2": 2,
-};
-
-export interface States {
-  firstDigit: string;
-  secondDigit: string;
-  multiplier: string;
-  tolerance: string;
-  quantity: string;
-  powerRating: string;
-}
-
-const defaultStates: States = {
-  firstDigit: "-",
-  secondDigit: "-",
-  multiplier: "-",
-  tolerance: "-",
-  quantity: "",
-  powerRating: "-",
-};
+import { Context } from "@/pages/Home/context";
+import { Resistor } from "@/utils/types";
+import { checkStandardResistor, readResistorValue } from "@/utils/calculations";
+import { useCallback, useContext, useEffect, useState } from "react";
+import {
+  toleranceMap,
+  powerRatingMap,
+  type States,
+  defaultStates,
+} from "./constants";
 
 export default function AddResistor() {
-  const { appendResistor } = React.useContext(Context);
+  const { appendResistor } = useContext(Context);
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [states, setStates] = React.useState<States>(defaultStates);
+  const [states, setStates] = useState<States>(defaultStates);
 
-  const [value, setVal] = React.useState<number>(0);
-  const [msg, setMsg] = React.useState<string>("");
-  const [sw, setSw] = React.useState<boolean>(false);
+  const [value, setVal] = useState<number>(0);
+  const [msg, setMsg] = useState<string>("");
+  const [sw, setSw] = useState<boolean>(false);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -56,51 +32,52 @@ export default function AddResistor() {
     setMsg("");
   };
 
-  const handleOutsideClick = (e) => {
-    if (e.target.id === "modal-background") {
+  const handleOutsideClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    if ((e.target as HTMLDivElement).id === "modal-background") {
       handleModalClose();
     }
   };
 
   const setState = (prop: string, value: string) => {
-    const sts = { ...states };
-    sts[prop] = value;
-    setStates(sts);
+    setStates((prevStates) => ({ ...prevStates, [prop]: value }));
   };
 
-  const validation = (fun: () => void = undefined) => {
-    const {
-      firstDigit,
-      secondDigit,
-      multiplier,
-      tolerance,
-      powerRating,
-      quantity,
-    } = states;
-    const resp = check();
-    setMsg(resp);
-    if (resp === "") if (fun) fun();
+  const validation = useCallback(
+    (fun: () => void = () => {}) => {
+      const {
+        firstDigit,
+        secondDigit,
+        multiplier,
+        tolerance,
+        // powerRating,
+        quantity,
+      } = states;
+      const resp = check();
+      setMsg(resp);
+      if (resp === "") if (fun) fun();
 
-    function check(): string {
-      if (firstDigit === "-") return "First digit is required";
+      function check(): string {
+        if (firstDigit === "-") return "First digit is required";
 
-      if (secondDigit === "-") return "Second digit is required";
+        if (secondDigit === "-") return "Second digit is required";
 
-      if (multiplier === "-") return "Multiplier is required";
+        if (multiplier === "-") return "Multiplier is required";
 
-      if (tolerance === "-") return "Tolerance is required";
+        if (tolerance === "-") return "Tolerance is required";
 
-      if (states.quantity === "") return "Quantity is required";
+        if (states.quantity === "") return "Quantity is required";
 
-      if (Number(quantity) <= 0) return "Quantity must be greater than 0";
+        if (Number(quantity) <= 0) return "Quantity must be greater than 0";
 
-      if (quantity.includes(".")) return "Quantity must be an integer";
+        if (quantity.includes(".")) return "Quantity must be an integer";
 
-      if (states.powerRating === "-") return "Power rating is required";
+        if (states.powerRating === "-") return "Power rating is required";
 
-      return checkStandardResistor(value, states.tolerance);
-    }
-  };
+        return checkStandardResistor(value, states.tolerance);
+      }
+    },
+    [states, value]
+  );
 
   const handleAdd = () => {
     setSw(true);
@@ -116,14 +93,14 @@ export default function AddResistor() {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const { firstDigit, secondDigit, multiplier } = states;
     setVal(readResistorValue(firstDigit, secondDigit, multiplier));
   }, [states]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (sw) validation();
-  }, [value]);
+  }, [value, validation, sw]);
 
   return (
     <UI

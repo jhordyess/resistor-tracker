@@ -1,6 +1,5 @@
-import * as React from "react";
-import colors from "@utils/resistorColors";
-import { Resistor } from "@utils/types";
+import colors from "@/utils/resistorColors";
+import { type Resistor } from "@/utils/types";
 
 const Resistor = ({
   value = ["1", "2", "3", "10"],

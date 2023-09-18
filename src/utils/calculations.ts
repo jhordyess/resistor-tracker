@@ -95,9 +95,10 @@ const readResistorValue = (
     value = Number(first + second);
 
     value *= Math.pow(10, NMultiply);
-  } catch (error) {
-  } finally {
     return value || 0;
+  } catch {
+    console.info("Error reading resistor value");
+    return 0;
   }
 };
 
@@ -112,9 +113,8 @@ const readResistorValueInverse = (value: number): [string, string, string] => {
 
 const checkStandardResistor = (value: number, tolerance: string): string => {
   let msg = "";
-  const E: ESeries = colors.tolerance.find(
-    (e) => e.value === tolerance
-  )?.eSeries;
+  const E = colors.tolerance.find((e) => e.value === tolerance)?.eSeries;
+  if (!E) return "Invalid tolerance";
   const aproxRes = findAproxStandardResistor(value, E);
   if (aproxRes.length === 0) msg = "Invalid resistor value";
   if (aproxRes.length === 2 && aproxRes[0] !== value && aproxRes[1] !== value)

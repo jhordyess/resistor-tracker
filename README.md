@@ -6,7 +6,7 @@ React-based web app that lets you inventory your resistors by reading their colo
 
 To add resistors, click the "+" button in the title, and a modal with the form will appear. From there, select the 1st Digit, 2nd Digit, Multiplier, Tolerance and Power Rating, and fill the quantity field.
 
-In the list view, you can adjust the quantity of resistors by using the "+/-" buttons. *If the quantity is 0, the resistor will be removed*.
+In the list view, you can adjust the quantity of resistors by using the "+/-" buttons. _If the quantity is 0, the resistor will be removed_.
 
 You can search for resistors based on the values, and the list of resistors will be updated to show only the ones that match.
 

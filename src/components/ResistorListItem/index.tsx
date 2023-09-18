@@ -1,13 +1,13 @@
-import * as React from "react";
 import ResistorImage from "./ResistorImage";
-import { format2SIUnits, readResistorValueInverse } from "@utils/calculations";
-import { Resistor } from "@utils/types";
+import { format2SIUnits, readResistorValueInverse } from "@/utils/calculations";
+import { Resistor } from "@/utils/types";
 
 const convertPowerRating = (powerRating: Resistor["powerRating"]) => {
   if (powerRating === 0.25) return "1/4 W";
   if (powerRating === 0.5) return "1/2 W";
   if (powerRating === 1) return "1 W";
   if (powerRating === 2) return "2 W";
+  else return "";
 };
 
 export default function ResistorListItem({
@@ -18,20 +18,28 @@ export default function ResistorListItem({
   quantity,
   addQuantity,
   subtractQuantity,
+}: {
+  value: number;
+  tolerance: number;
+  className: string;
+  powerRating: Resistor["powerRating"];
+  quantity: number;
+  addQuantity: () => void;
+  subtractQuantity: () => void;
 }) {
   return (
     <li
       key={value}
-      className="flex flex-col border rounded-3xl p-4 bg-white w-full"
+      className="flex w-full flex-col rounded-3xl border bg-white p-4"
     >
-      <div className="flex-1 font-bold flex justify-between">
+      <div className="flex flex-1 justify-between font-bold">
         <div>{format2SIUnits(value)}</div>
 
-        <div className={`px-2 py-1 rounded-full text-xs ${className}`}>
+        <div className={`rounded-full px-2 py-1 text-xs ${className}`}>
           {tolerance} %
         </div>
 
-        <div className="px-2 py-1 rounded-full text-white bg-green-400 text-xs">
+        <div className="rounded-full bg-green-400 px-2 py-1 text-xs text-white">
           {convertPowerRating(powerRating)}
         </div>
       </div>
@@ -43,18 +51,18 @@ export default function ResistorListItem({
         />
       </div>
 
-      <div className="flex-1 text-gray-700 flex gap-3 justify-center align-middle">
+      <div className="flex flex-1 justify-center gap-3 align-middle text-gray-700">
         <div className="self-center">Quantity</div>
-        <div className="rounded-full border flex gap-3 justify-evenly">
+        <div className="flex justify-evenly gap-3 rounded-full border">
           <button
-            className="hover:bg-gray-50 text-black font-bold p-2 rounded-full"
+            className="rounded-full p-2 font-bold text-black hover:bg-gray-50"
             onClick={subtractQuantity}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-3 h-3"
+              className="h-3 w-3"
             >
               <path
                 fillRule="evenodd"
@@ -64,14 +72,14 @@ export default function ResistorListItem({
           </button>
           <div className="self-center">{quantity}</div>
           <button
-            className="hover:bg-gray-50 text-black font-bold p-2 rounded-full"
+            className="rounded-full p-2 font-bold text-black hover:bg-gray-50"
             onClick={addQuantity}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-3 h-3"
+              className="h-3 w-3"
             >
               <path d="M9 2a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H3a1 1 0 1 1 0-2h6V2z" />
             </svg>

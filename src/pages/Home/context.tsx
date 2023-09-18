@@ -1,8 +1,26 @@
-import { useSemiPersistentState } from "@utils/hooks";
-import { Resistor } from "@utils/types";
-import * as React from "react";
+import { useSemiPersistentState } from "@/utils/hooks";
+import { Resistor } from "@/utils/types";
+import { createContext } from "react";
 
-const Context = React.createContext(null);
+const Context = createContext<{
+  searchedResistors: Resistor[];
+  subtractQuantity: (
+    value: number,
+    powerRating: number,
+    tolerance: number
+  ) => void;
+  addQuantity: (value: number, powerRating: number, tolerance: number) => void;
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  appendResistor: (resistor: Resistor) => void;
+}>({
+  searchedResistors: [],
+  subtractQuantity: () => {},
+  addQuantity: () => {},
+  searchValue: "",
+  setSearchValue: () => {},
+  appendResistor: () => {},
+});
 
 const resistorListDef: Resistor[] = [
   { value: 10, powerRating: 0.25, tolerance: 5, quantity: 1 },
@@ -13,7 +31,7 @@ const resistorListDef: Resistor[] = [
   { value: 1000, powerRating: 0.25, tolerance: 20, quantity: 3 },
 ];
 
-const Provider = ({ children }) => {
+const Provider = ({ children }: { children: React.ReactNode }) => {
   const [resistorList, setResistorList] = useSemiPersistentState<Resistor[]>(
     "resistorList",
     resistorListDef
@@ -41,7 +59,7 @@ const Provider = ({ children }) => {
     powerRating: number,
     tolerance: number
   ) => {
-    let newResistorList: Resistor[] = [];
+    const newResistorList: Resistor[] = [];
     resistorList.forEach((resistor) => {
       if (
         resistor.value === value &&

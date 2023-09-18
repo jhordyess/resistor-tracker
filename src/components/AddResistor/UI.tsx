@@ -1,10 +1,8 @@
-import * as React from "react";
-import colors from "@utils/resistorColors";
-import { Resistor } from "@utils/types";
+import colors from "@/utils/resistorColors";
 import { createPortal as teleport } from "react-dom";
-import ResistorImg from "@components/ResistorListItem/ResistorImage";
-import { format2SIUnits } from "@utils/calculations";
-import { States, powerRatingMap } from ".";
+import ResistorImg from "@/components/ResistorListItem/ResistorImage";
+import { format2SIUnits } from "@/utils/calculations";
+import { powerRatingMap, type States } from "./constants";
 
 const fourBand = [
   {
@@ -53,8 +51,8 @@ const Modal = ({
       id="modal-background"
     ></div>
 
-    <div className="bg-white rounded-lg shadow-lg z-10 p-4 h-screen sm:h-auto overflow-y-scroll sm:overflow-y-auto">
-      <h2 className="text-xl font-bold mb-2">Add new resistor</h2>
+    <div className="z-10 h-screen overflow-y-scroll rounded-lg bg-white p-4 shadow-lg sm:h-auto sm:overflow-y-auto">
+      <h2 className="mb-2 text-xl font-bold">Add new resistor</h2>
       <div className="flex flex-col items-center">
         <p className="text-black">{format2SIUnits(value)}</p>
         <ResistorImg
@@ -70,17 +68,17 @@ const Modal = ({
           powerRating={powerRatingMap[states.powerRating]}
         />
       </div>
-      <div className="text-gray-700 mb-4 grid grid-cols-1   sm:grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="mb-4 grid grid-cols-1 gap-3   text-gray-700 sm:grid-cols-2 md:grid-cols-4">
         {fourBand.map(({ name, label, options }, index) => (
           <div className="flex flex-col" key={index}>
             <label htmlFor={name}>{label}</label>
             <select
               name={name}
-              value={states[name]}
+              value={states[name as keyof States]}
               onChange={(e) => {
                 setState(name, e.target.value);
               }}
-              className="p-2 rounded w-full sm:w-40 border"
+              className="w-full rounded border p-2 sm:w-40"
             >
               <option value="-" disabled>
                 -
@@ -108,13 +106,13 @@ const Modal = ({
           </div>
         ))}
       </div>
-      <div className="text-gray-700 mb-4 grid grid-cols-1 sm:flex gap-3 sm:justify-center">
+      <div className="mb-4 grid grid-cols-1 gap-3 text-gray-700 sm:flex sm:justify-center">
         <div className="flex flex-col">
           <label htmlFor="quantity">Quantity</label>
           <input
             type="number"
             name="quantity"
-            className="p-2 rounded w-full sm:w-40 border"
+            className="w-full rounded border p-2 sm:w-40"
             min={1}
             step={1}
             value={states.quantity}
@@ -127,7 +125,7 @@ const Modal = ({
           <label htmlFor="powerRating">Power Rating</label>
           <select
             name="powerRating"
-            className="p-2 rounded w-full sm:w-40 border"
+            className="w-full rounded border p-2 sm:w-40"
             value={states.powerRating}
             onChange={(e) => {
               setState("powerRating", e.target.value);
@@ -147,15 +145,15 @@ const Modal = ({
         <div className="self-center">
           {msg && <p className="text-red-500">{msg}</p>}
         </div>
-        <div className="flex gap-4 justify-end">
+        <div className="flex justify-end gap-4">
           <button
-            className="bg-white hover:bg-gray-100 text-black font-bold py-1 px-4 rounded-lg border"
+            className="rounded-lg border bg-white px-4 py-1 font-bold text-black hover:bg-gray-100"
             onClick={handleAdd}
           >
             Add
           </button>
           <button
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg"
+            className="rounded-lg bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
             onClick={handleModalClose}
           >
             Close
@@ -169,7 +167,7 @@ const Modal = ({
 interface UIProps {
   states: States;
   setState: (prop: string, value: string) => void;
-  handleOutsideClick: (e) => void;
+  handleOutsideClick: React.MouseEventHandler<HTMLDivElement>;
   handleModalClose: () => void;
   handleModalOpen: () => void;
   isModalOpen: boolean;
@@ -178,7 +176,7 @@ interface UIProps {
   msg: string;
 }
 
-const UI = ({
+export default function UI({
   states,
   setState,
   handleOutsideClick,
@@ -188,34 +186,35 @@ const UI = ({
   handleAdd,
   value,
   msg,
-}: UIProps) => (
-  <div onClick={handleOutsideClick} className="self-center">
-    <button
-      className="hover:bg-gray-100 text-black font-bold p-2 rounded-lg border border-gray-400"
-      onClick={handleModalOpen}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className="w-3 h-3"
+}: UIProps) {
+  return (
+    <div onClick={handleOutsideClick} className="self-center">
+      <button
+        className="rounded-lg border border-gray-400 p-2 font-bold text-black hover:bg-gray-100"
+        onClick={handleModalOpen}
       >
-        <path d="M9 2a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H3a1 1 0 1 1 0-2h6V2z" />
-      </svg>
-    </button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="h-3 w-3"
+        >
+          <path d="M9 2a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H3a1 1 0 1 1 0-2h6V2z" />
+        </svg>
+      </button>
 
-    {isModalOpen &&
-      teleport(
-        <Modal
-          handleModalClose={handleModalClose}
-          handleAdd={handleAdd}
-          states={states}
-          setState={setState}
-          value={value}
-          msg={msg}
-        />,
-        document.getElementById("modal-root")
-      )}
-  </div>
-);
-export default UI;
+      {isModalOpen &&
+        teleport(
+          <Modal
+            handleModalClose={handleModalClose}
+            handleAdd={handleAdd}
+            states={states}
+            setState={setState}
+            value={value}
+            msg={msg}
+          />,
+          document.getElementById("modal-root") as HTMLElement
+        )}
+    </div>
+  );
+}

@@ -1,19 +1,22 @@
-import { Context } from "@pages/Home/context";
-import * as React from "react";
+import { Context } from "@/pages/Home/context";
+import { useContext } from "react";
 
 export default function SearchBar() {
-  const { searchValue, setSearchValue } = React.useContext(Context);
+  const { searchValue, setSearchValue } = useContext(Context);
 
-  const onSearchValueChange = (event) => {
+  const onSearchValueChange: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
     setSearchValue(event.target.value);
   };
+
   return (
     <input
       type="text"
       placeholder="Search..."
       value={searchValue}
       onChange={onSearchValueChange}
-      className="w-full p-2 rounded-lg border"
+      className="w-full rounded-lg border p-2"
     />
   );
 }
