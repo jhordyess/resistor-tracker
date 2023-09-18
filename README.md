@@ -28,13 +28,13 @@ For a theoretical review, I may suggest:
 - JS Libraries: [ReactJS](https://reactjs.org/)
 - Programming Language: [TypeScript](https://www.typescriptlang.org/)
 - CSS Libraries: [TailwindCSS](https://tailwindcss.com/)
-- Bundler: [Webpack](https://webpack.js.org/)
+- Build Tool: [Vite](https://vitejs.dev/)
 - Hosting: [GitHub Pages](https://pages.github.com/)
 - Dev Environment: [VSCode](https://code.visualstudio.com/) with [dev containers](https://code.visualstudio.com/docs/remote/containers) in [Zorin OS](https://zorinos.com/)
 
-### Online
+### Demo
 
-Visit the project at: <https://res.jhordyess.com>
+You can see the demo here: <https://res.jhordyess.com>
 
 ### Screenshots
 
@@ -44,6 +44,64 @@ Visit the project at: <https://res.jhordyess.com>
 ### Evolution from another project
 
 This project is the result of my mini project with JS [resistor-color-code](https://github.com/jhordyess/resistor-color-code), It's a resistor value calculator for 4 bands of color that helped me to develop this project.
+
+## How to use
+
+1. Clone the repository:
+
+```bash
+git clone git@github.com:jhordyess/resistor-tracker.git
+```
+
+2. Open the project folder:
+
+```bash
+cd resistor-tracker
+```
+
+3. Install the dependencies:
+
+```bash
+yarn
+```
+
+4. Run the project:
+
+```bash
+yarn dev
+```
+
+5. Open the browser at <http://localhost:5173/resistor-tracker/>
+
+## How to use with VSCode dev containers
+
+You can use the VSCode dev containers to run the project in a containerized environment.
+
+You need to have installed [Docker](https://www.docker.com/) and [VSCode](https://code.visualstudio.com/), and the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
+
+1. Clone the repository:
+
+```bash
+git clone git@github.com:jhordyess/resistor-tracker.git
+```
+
+2. Open the project with VSCode:
+
+```bash
+code resistor-tracker
+```
+
+3. Open the command palette and select the option `Dev Containers: Reopen in Container`.
+
+4. Wait for the container to be built and the project to be started.
+
+5. Open the terminal in VSCode and run the project:
+
+```bash
+yarn dev
+```
+
+6. Open the browser at <http://localhost:5173/resistor-tracker/>
 
 ## To-Do
 
