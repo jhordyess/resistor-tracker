@@ -34,7 +34,7 @@ For a theoretical review, I may suggest:
 
 ### Demo
 
-You can see the demo here: <https://res.jhordyess.com>
+You can see the demo here: <https://jhordyess.github.io/resistor-tracker/>
 
 ### Screenshots
 
